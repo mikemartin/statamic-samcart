@@ -71,7 +71,6 @@ class WebhookController
     protected function createOrder(object $data, string $slug)
     {
         $data['title'] = 'Order #'.$slug;
-        $date = now()->timestamp;
 
         return Entry::make()
             ->collection('orders')
@@ -79,7 +78,7 @@ class WebhookController
             ->data($data)
             ->slug($slug)
             ->date(now())
-            ->set('updated_at', $date)
+            ->set('updated_at', now()->timestamp)
             ->save();
     }
 }
