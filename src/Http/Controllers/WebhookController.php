@@ -11,31 +11,33 @@ class WebhookController
     public function store(Request $request)
     {
 
+        // Validate the user input
         $validatedData = $request->validate([
             'order.id' => 'required|numeric',
             'customer.email' => 'required|email',
             'customer.first_name' => 'nullable|string|max:250',
-            'customer.last_name' => 'nullable|string|max:250'
+            'customer.last_name' => 'nullable|string|max:250',
+            'product.id' => 'required|numeric'
         ]);
 
-
-        $slug = $validatedData['order.id'];
-        $email = $validatedData['customer.email'];
+        $slug = $validatedData['order']['id'];
+        $email = $validatedData['customer']['email'];
 
         // Find course with matching samcart product id
         $product = Entry::query()
             ->where('collection','courses')
-            ->where('product_id', $validatedData['product.id'])
+            ->where('product_id', $validatedData['product']['id'])
             ->first();
 
         // Check if member email exists
         $member = User::findByEmail($email);
 
+
         if (!$member) {
             // Collect user data and subscribe to product
             $user = [
-                'first_name' => $validatedData['customer.first_name'],
-                'last_name' => $validatedData['customer.last_name'],
+                'first_name' => $validatedData['customer']['first_name'],
+                'last_name' => $validatedData['customer']['last_name'],
                 'products' => [$product->id()],
             ];
             // Create user from customer email
