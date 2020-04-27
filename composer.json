@@ -1,0 +1,35 @@
+{
+    "name": "mikemartin/samcart",
+    "type": "statamic-addon",
+    "autoload": {
+        "psr-4": {
+            "Mikemartin\\Samcart\\": "src",
+            "Mikemartin\\Samcart\\Tests\\": "tests"
+        },
+        "classmap": [
+            "tests/TestCase.php"
+        ]
+    },
+    "extra": {
+        "statamic": {
+            "name": "Samcart",
+            "description": "Samcart addon"
+        },
+        "laravel": {
+            "providers": [
+                "Mikemartin\\Samcart\\ServiceProvider"
+            ]
+        }
+    },
+    "require-dev": {
+        "orchestra/testbench": "^5.1",
+        "phpunit/phpunit": "^9.1"
+    },
+    "require": {
+        "php": "^7.4",
+        "doctrine/dbal": "^2.10",
+        "illuminate/support": "^6.0 || ^7.0",
+        "statamic/cms": "^3.0@beta"
+    },
+    "minimum-stability": "dev"
+}
