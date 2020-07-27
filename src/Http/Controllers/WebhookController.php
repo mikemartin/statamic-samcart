@@ -32,6 +32,7 @@ class WebhookController
         // Find course with matching samcart product id
         $product = Entry::query()
             ->where('collection','courses')
+            ->where('collection','books')
             ->where('product_id', $validatedData['product']['id'])
             ->first();
 
