@@ -22,6 +22,12 @@ class WebhookController
 
         $slug = $validatedData['order']['id'];
         $email = $validatedData['customer']['email'];
+        $name = $validatedData['customer']['first_name'];
+        $lastName = $validatedData['customer']['last_name'];
+
+        if ($lastName) {
+          $name .= ' '.$lastName;
+        }
 
         // Find course with matching samcart product id
         $product = Entry::query()
@@ -36,8 +42,7 @@ class WebhookController
         if (!$member) {
             // Collect user data and subscribe to product
             $user = [
-                'first_name' => $validatedData['customer']['first_name'],
-                'last_name' => $validatedData['customer']['last_name'],
+                'name' => $name,
                 'products' => [$product->id()],
             ];
             // Create user from customer email
