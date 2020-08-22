@@ -33,7 +33,7 @@ class WebhookController
         $product = Entry::query()
             ->where('collection','courses')
             ->where('collection','books')
-            ->where('product_id', $validatedData['product']['id'])
+            ->where('product_id', 'like', "%{$validatedData['product']['id']}%")
             ->first();
 
         // Check if member email exists
