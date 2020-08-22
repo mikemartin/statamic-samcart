@@ -28,7 +28,7 @@
     "require": {
         "php": "^7.2",
         "illuminate/support": "^6.0 || ^7.0",
-        "statamic/cms": "^3.0@beta"
+        "statamic/cms": "3.0.*"
     },
     "minimum-stability": "dev"
 }
