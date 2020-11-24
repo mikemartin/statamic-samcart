@@ -29,31 +29,34 @@ class WebhookController
           $name .= ' '.$lastName;
         }
 
-        // Find course with matching samcart product id
-        $product = Entry::query()
+        // Find courses and books with matching samcart product id
+        $products = Entry::query()
             ->where('collection','courses')
             ->where('collection','books')
             ->where('product_id', 'like', "%{$validatedData['product']['id']}%")
-            ->first();
+            ->get()
+            ->map(function ($product) {
+              return $product->id();
+            })
+            ->toArray();
 
         // Check if member email exists
         $member = User::findByEmail($email);
-
 
         if (!$member) {
             // Collect user data and subscribe to product
             $user = [
                 'name' => $name,
-                'products' => [$product->id()],
+                'products' => $products,
             ];
             // Create user from customer email
             $this->createUser($user, $email);
         } else {
             // Subscribe existing user to product
-            $products = $member->value('products') ?? [];
-            $products = array_merge($products, [$product->id()]);
+            $memberProducts = $member->value('products') ?? [];
+            $memberProducts = array_unique(array_merge($memberProducts, $products));
 
-            $member->set('products', $products)
+            $member->set('products', $memberProducts)
             ->save();
         }
 
