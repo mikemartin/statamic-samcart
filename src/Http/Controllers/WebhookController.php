@@ -74,6 +74,7 @@ class WebhookController
             ->email($email)
             ->data($data)
             ->groups('members')
+            ->id(Stache::generateId())
             ->save();
     }
 
