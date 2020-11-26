@@ -5,6 +5,7 @@ namespace Mikemartin\Samcart\Http\Controllers;
 use Illuminate\Http\Request;
 use Statamic\Facades\Entry;
 use Statamic\Facades\User;
+use Statamic\Facades\Stache;
 
 class WebhookController
 {
