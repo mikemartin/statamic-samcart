@@ -5,13 +5,11 @@ namespace Mikemartin\Samcart\Http\Controllers;
 use Illuminate\Http\Request;
 use Statamic\Facades\Entry;
 use Statamic\Facades\User;
-use Statamic\Facades\Stache;
 
 class WebhookController
 {
     public function store(Request $request)
     {
-
         // Validate the user input
         $validatedData = $request->validate([
             'order.id' => 'required|numeric',
@@ -61,8 +59,8 @@ class WebhookController
             ->save();
         }
 
-        // Create Order entry from request object
-        if (!Entry::findBySlug($slug, 'orders')) {
+        // Create Order model from request object
+        if (resolve(config('samcart.model'))::where('order_number', $slug)->count() == 0) {
             $this->createOrder($request, $slug);
         }
 
@@ -82,13 +80,12 @@ class WebhookController
     {
         $data['title'] = 'Order #'.$slug;
 
-        return Entry::make()
-            ->collection('orders')
-            ->locale('default')
-            ->data($data)
-            ->slug($slug)
-            ->date(now())
-            ->set('updated_at', now()->timestamp)
-            ->save();
+        return resolve(config('samcart.model'))::create([
+            'title' => $data['title'],
+            'order_number' => $slug,
+            'product' => $data['product'],
+            'customer' => $data['customer'],
+            'order' => $data['order'],
+        ]);
     }
 }
