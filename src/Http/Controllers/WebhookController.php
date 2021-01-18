@@ -3,7 +3,6 @@
 namespace Mikemartin\Samcart\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Mikemartin\Samcart\Models\Order;
 use Statamic\Facades\Entry;
 use Statamic\Facades\User;
 
@@ -61,7 +60,7 @@ class WebhookController
         }
 
         // Create Order model from request object
-        if (Order::where('order_number', $slug)->count() == 0) {
+        if (resolve(config('samcart.model'))::where('order_number', $slug)->count() == 0) {
             $this->createOrder($request, $slug);
         }
 
@@ -81,7 +80,7 @@ class WebhookController
     {
         $data['title'] = 'Order #'.$slug;
 
-        return Order::create([
+        return resolve(config('samcart.model'))::create([
             'title' => $data['title'],
             'order_number' => $slug,
             'product' => $data['product'],
