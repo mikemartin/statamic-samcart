@@ -53,7 +53,7 @@ class WebhookController
         } else {
             // Subscribe existing user to product
             $memberProducts = $member->value('products') ?? [];
-            $memberProducts = array_unique(array_merge($memberProducts, $products));
+            $memberProducts = collect($memberProducts)->merge($products)->unique()->sort()->values()->toArray();
 
             $member->set('products', $memberProducts)
             ->save();
