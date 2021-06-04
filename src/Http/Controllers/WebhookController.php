@@ -68,9 +68,8 @@ class WebhookController
 
         // Remove products for refund, cancellations and delinquents
         if ($type == 'Refund' || $type == 'SubscriptionDelinquent' || $type == 'Cancel' ) {
-          // Unsubscribe existing user from product
           $memberProducts = $member->value('products') ?? [];
-
+          // Unsubscribe existing user from product
           foreach($products as $product){
             $memberProducts = collect($memberProducts)->reject($product)->sort()->values()->toArray();
           }
