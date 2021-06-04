@@ -72,7 +72,7 @@ class WebhookController
           $memberProducts = $member->value('products') ?? [];
 
           foreach($products as $product){
-            $memberProducts = collect($memberProducts)->reject($product);
+            $memberProducts = collect($memberProducts)->reject($product)->sort()->values()->toArray();
           }
 
           $member->set('products', $memberProducts)
