@@ -42,26 +42,41 @@ class WebhookController
         // Check if member email exists
         $member = User::findByEmail($email);
 
-        if (!$member) {
-            // Collect user data and subscribe to product
-            $user = [
-                'name' => $name,
-                'products' => $products,
-            ];
-            // Create user from customer email
-            $this->createUser($user, $email);
-        } else {
-            // Subscribe existing user to product
-            $memberProducts = $member->value('products') ?? [];
-            $memberProducts = collect($memberProducts)->merge($products)->unique()->sort()->values()->toArray();
+        if ($type == 'Order') {
+          if (!$member) {
+              // Collect user data and subscribe to product
+              $user = [
+                  'name' => $name,
+                  'products' => $products,
+              ];
+              // Create user from customer email
+              $this->createUser($user, $email);
+          } else {
+              // Subscribe existing user to product
+              $memberProducts = $member->value('products') ?? [];
+              $memberProducts = collect($memberProducts)->merge($products)->unique()->sort()->values()->toArray();
 
-            $member->set('products', $memberProducts)
-            ->save();
+              $member->set('products', $memberProducts)
+              ->save();
+          }
+
+          // Create Order model from request object
+          if (resolve(config('samcart.model'))::where('order_number', $slug)->count() == 0) {
+              $this->createOrder($request, $slug);
+          }
         }
 
-        // Create Order model from request object
-        if (resolve(config('samcart.model'))::where('order_number', $slug)->count() == 0) {
-            $this->createOrder($request, $slug);
+        // Remove products for refund, cancellations and delinquents
+        if ($type == 'Refund' || $type == 'SubscriptionDelinquent' || $type == 'Cancel' ) {
+          // Unsubscribe existing user from product
+          $memberProducts = $member->value('products') ?? [];
+
+          foreach($products as $product){
+            $memberProducts = collect($memberProducts)->reject($product);
+          }
+
+          $member->set('products', $memberProducts)
+          ->save();
         }
 
         return;
