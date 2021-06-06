@@ -12,6 +12,7 @@ class WebhookController
     {
         // Validate the user input
         $validatedData = $request->validate([
+            'type' => 'required|string|max:250',
             'order.id' => 'required|numeric',
             'customer.email' => 'required|email',
             'customer.first_name' => 'nullable|string|max:250',
@@ -19,6 +20,7 @@ class WebhookController
             'product.id' => 'required|numeric'
         ]);
 
+        $type = $validatedData['type'];
         $slug = $validatedData['order']['id'];
         $email = $validatedData['customer']['email'];
         $name = $validatedData['customer']['first_name'];
