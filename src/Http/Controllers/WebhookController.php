@@ -34,6 +34,7 @@ class WebhookController
         $products = Entry::query()
             ->where('collection','courses')
             ->where('collection','books')
+            ->where('collection','bundles')
             ->where('product_id', 'like', "%{$validatedData['product']['id']}%")
             ->get()
             ->map(function ($product) {
