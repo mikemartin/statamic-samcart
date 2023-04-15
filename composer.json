@@ -26,9 +26,9 @@
         "phpunit/phpunit": "^9.1"
     },
     "require": {
-        "php": "^7.4 || ^8.0",
+        "php": "^8.1",
         "illuminate/support": "^7.0 || ^8.0",
-        "statamic/cms": "3.3.*"
+        "statamic/cms": "3.4.*"
     },
     "minimum-stability": "dev"
 }
